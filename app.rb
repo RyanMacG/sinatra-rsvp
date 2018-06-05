@@ -1,8 +1,13 @@
 require 'sinatra/base'
 require 'sinatra/json'
+require 'sinatra/namespace'
 
 class App < Sinatra::Base
-  get '/' do
-    json message: 'Hello the app is running'
+  register Sinatra::Namespace
+
+  namespace '/api' do
+    get '/health' do
+      json message: 'The Application is running'
+    end
   end
 end
