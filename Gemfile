@@ -2,7 +2,8 @@ source 'https://rubygems.org'
 ruby '2.5.1'
 
 gem 'pg'
-gem 'sequel', '~> 5.3'
+gem 'puma'
+gem 'sequel', '~> 5.9'
 gem 'sinatra'
 gem 'sinatra-contrib'
 
