@@ -11,37 +11,25 @@ class App < Sinatra::Base
     end
 
     get '/rsvps' do
-      json [
-        {
-          name: 'Foo Bar',
-          dietary: '',
-          access_key: 'abc123'
-        },
-        {
-          name: 'Baz Qux and Bar Qux',
-          dietary: 'Gluten free',
-          access_key: 'xyz456'
-        }
-      ]
+      rsvps = DB[:rsvps].select(:name, :dietary)
+      json rsvps.all
     end
 
     get '/rsvps/:access_key' do
-      json_response =
-        if params[:access_key] == 'abc123'
-          {
-            name: 'Foo Bar',
-            dietary: '',
-            access_key: 'abc123'
-          }
-        else
-          {
-            name: 'Baz Qux and Bar Qux',
-            dietary: 'Gluten free',
-            access_key: 'xyz456'
-          }
-        end
+      rsvp = get_rsvp(access_key: params[:access_key])
 
-      json(json_response)
+      if rsvp
+        json rsvp
+      else
+        status 404
+        json message: 'the rsvp was not found'
+      end
     end
+  end
+
+private
+  def get_rsvp(access_key:)
+    rsvps = DB[:rsvps].select(:name, :dietary, :access_key)
+    rsvps.first(access_key: access_key)
   end
 end
