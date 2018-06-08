@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# The Jenkins runner doesn't support TTY sessions meaning docker-compose exec commands
-# failed to execute properly and would hang the CI
-# https://github.com/docker/compose/issues/5696
 until docker-compose exec -T db pg_isready -hdb -U root &> /dev/null
 do
   printf "."
