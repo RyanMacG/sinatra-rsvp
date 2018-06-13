@@ -107,5 +107,65 @@ RSpec.describe App do
         end
       end
     end
+
+    context 'updating RSVPs' do
+      context 'visting /api/rsvps/abc123' do
+        before { put '/api/rsvps/abc123', dietary: 'Vegan' }
+
+        let(:updated_rsvp) {
+          {
+            name: 'Foo Bar',
+            dietary: 'Vegan',
+            access_key: 'abc123'
+          }.to_json
+        }
+
+        it 'returns a 200' do
+          expect(last_response).to be_ok
+        end
+
+        it 'returns the update RSVP' do
+          expect(last_response.body).to eq(updated_rsvp)
+        end
+      end
+
+      context 'visiting /api/rsvps/xyz456' do
+        before { put '/api/rsvps/xyz456', dietary: '' }
+
+        let(:updated_rsvp) {
+          {
+            name: 'Baz Qux and Bar Qux',
+            dietary: '',
+            access_key: 'xyz456'
+          }.to_json
+        }
+
+        it 'returns a 200' do
+          expect(last_response).to be_ok
+        end
+
+        it 'returns the updated RSVP' do
+          expect(last_response.body).to eq(updated_rsvp)
+        end
+      end
+
+      context 'visiting /api/rsvps/not-a-key' do
+        before { put '/api/rsvps/not-a-key' }
+
+        let(:error) {
+          {
+            message: 'the rsvp was not found'
+          }.to_json
+        }
+
+        it 'returns a 404' do
+          expect(last_response.status).to eq(404)
+        end
+
+        it 'responds with the RSVP' do
+          expect(last_response.body).to eq(error)
+        end
+      end
+    end
   end
 end

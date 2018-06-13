@@ -25,9 +25,22 @@ class App < Sinatra::Base
         json message: 'the rsvp was not found'
       end
     end
+
+    put '/rsvps/:access_key' do
+      rsvp = get_rsvp(access_key: params[:access_key])
+
+      if rsvp
+        rsvp.update(dietary: params[:dietary])
+        json rsvp
+      else
+        status 404
+        json message: 'the rsvp was not found'
+      end
+    end
   end
 
-private
+  private
+
   def get_rsvp(access_key:)
     rsvps = DB[:rsvps].select(:name, :dietary, :access_key)
     rsvps.first(access_key: access_key)
