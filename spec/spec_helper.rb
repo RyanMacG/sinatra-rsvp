@@ -26,6 +26,8 @@ DB = Sequel.connect(db_config)
 Sequel.extension :migration, :core_extensions
 Sequel::Migrator.run(DB, './db/migrations')
 
+require File.expand_path '../../models/rsvp.rb', __FILE__
+
 module RSpecMixin
   include Rack::Test::Methods
   def app() described_class end
