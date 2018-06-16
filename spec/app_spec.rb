@@ -58,7 +58,8 @@ RSpec.describe App do
             dietary: '',
             access_key: 'abc123',
             guests: 0,
-            guest_details: nil
+            guest_details: nil,
+            attending: false
           }.to_json
         }
 
@@ -79,7 +80,8 @@ RSpec.describe App do
             dietary: 'Gluten free',
             access_key: 'xyz456',
             guests: 0,
-            guest_details: nil
+            guest_details: nil,
+            attending: false
           }.to_json
         }
 
@@ -114,14 +116,15 @@ RSpec.describe App do
 
     context 'updating RSVPs' do
       context 'visting /api/rsvps/abc123' do
-        before { put '/api/rsvps/abc123', dietary: 'Vegan' }
+        before { put '/api/rsvps/abc123', dietary: 'Vegan', attending: true }
 
         let(:updated_rsvp) {
           {
             name: 'Foo Bar',
             dietary: 'Vegan',
             access_key: 'abc123',
-            guest_details: nil
+            guest_details: nil,
+            attending: true
           }.to_json
         }
 
@@ -135,14 +138,15 @@ RSpec.describe App do
       end
 
       context 'visiting /api/rsvps/xyz456' do
-        before { put '/api/rsvps/xyz456', dietary: '' }
+        before { put '/api/rsvps/xyz456', dietary: '', attending: false }
 
         let(:updated_rsvp) {
           {
             name: 'Baz Qux and Bar Qux',
             dietary: '',
             access_key: 'xyz456',
-            guest_details: nil
+            guest_details: nil,
+            attending: false
           }.to_json
         }
 
@@ -163,9 +167,10 @@ RSpec.describe App do
             put '/api/rsvps/snake',
                 dietary: '',
                 guest_details: [
-                  { name: 'Guest 1' },
-                  { name: 'Guest 2' }
-                ]
+                  { name: 'Guest 1', attending: true },
+                  { name: '', attending: false }
+                ],
+                attending: true
           end
 
           let(:updated_rsvp) {
@@ -173,7 +178,11 @@ RSpec.describe App do
               name: 'A Nother',
               dietary: '',
               access_key: 'snake',
-              guest_details: [{ name: 'Guest 1' }, { name: 'Guest 2' }]
+              guest_details: [
+                { name: 'Guest 1', attending: 'true' },
+                { name: '', attending: 'false' }
+              ],
+              attending: true
             }.to_json
           }
 
