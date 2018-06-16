@@ -56,7 +56,9 @@ RSpec.describe App do
           {
             name: 'Foo Bar',
             dietary: '',
-            access_key: 'abc123'
+            access_key: 'abc123',
+            guests: 0,
+            guest_details: nil
           }.to_json
         }
 
@@ -75,7 +77,9 @@ RSpec.describe App do
           {
             name: 'Baz Qux and Bar Qux',
             dietary: 'Gluten free',
-            access_key: 'xyz456'
+            access_key: 'xyz456',
+            guests: 0,
+            guest_details: nil
           }.to_json
         }
 
@@ -116,7 +120,8 @@ RSpec.describe App do
           {
             name: 'Foo Bar',
             dietary: 'Vegan',
-            access_key: 'abc123'
+            access_key: 'abc123',
+            guest_details: nil
           }.to_json
         }
 
@@ -136,7 +141,8 @@ RSpec.describe App do
           {
             name: 'Baz Qux and Bar Qux',
             dietary: '',
-            access_key: 'xyz456'
+            access_key: 'xyz456',
+            guest_details: nil
           }.to_json
         }
 
@@ -146,6 +152,38 @@ RSpec.describe App do
 
         it 'returns the updated RSVP' do
           expect(last_response.body).to eq(updated_rsvp)
+        end
+      end
+
+      context 'with extra guests' do
+        before { db[:rsvps].insert(name: 'A Nother', dietary: '', access_key: 'snake', guests: 2) }
+
+        context 'visiting /api/rsvps/snake' do
+          before do
+            put '/api/rsvps/snake',
+                dietary: '',
+                guest_details: [
+                  { name: 'Guest 1' },
+                  { name: 'Guest 2' }
+                ]
+          end
+
+          let(:updated_rsvp) {
+            {
+              name: 'A Nother',
+              dietary: '',
+              access_key: 'snake',
+              guest_details: [{ name: 'Guest 1' }, { name: 'Guest 2' }]
+            }.to_json
+          }
+
+          it 'returns a 200' do
+            expect(last_response).to be_ok
+          end
+
+          it 'returns the updated RSVP' do
+            expect(last_response.body).to eq(updated_rsvp)
+          end
         end
       end
 

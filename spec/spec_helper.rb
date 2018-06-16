@@ -23,8 +23,11 @@ end
 
 DB = Sequel.connect(db_config)
 
-Sequel.extension :migration, :core_extensions
+Sequel.extension :migration, :core_extensions, :pg_json
+Sequel::Model.plugin :json_serializer
 Sequel::Migrator.run(DB, './db/migrations')
+
+require File.expand_path '../../models/rsvp.rb', __FILE__
 
 module RSpecMixin
   include Rack::Test::Methods
