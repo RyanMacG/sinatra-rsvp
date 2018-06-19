@@ -29,7 +29,7 @@ class App < Sinatra::Base
       rsvp = get_rsvp(access_key: params[:access_key])
 
       if rsvp
-        rsvp.update(dietary: params[:dietary])
+        rsvp.update(dietary: params[:dietary], attending: params[:attending])
         rsvp.update(guest_details: Sequel.pg_json(params[:guest_details])) if rsvp.extra_guests?
 
         rsvp.to_json(except: %i[id guests])

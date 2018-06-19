@@ -4,6 +4,6 @@ Sequel.migration do
   end
 
   down do
-    remove_column :rsvps, :guests
+    remove_column :rsvps, :guest_details
   end
 end
