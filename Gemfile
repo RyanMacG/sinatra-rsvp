@@ -3,7 +3,7 @@ ruby '2.5.1'
 
 gem 'pg'
 gem 'puma'
-gem 'sequel', '~> 5.9'
+gem 'sequel', '~> 5.25'
 gem 'sinatra'
 gem 'sinatra-contrib'
 
